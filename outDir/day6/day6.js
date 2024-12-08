@@ -79,21 +79,16 @@ const checkIfLoop = (parsedData) => {
             pos.dir = up;
         }
     });
-    const dirChangeHistory = new Map();
+    const dirChangeHistory = new Set();
     while (pos.h + pos.dir[1] < height &&
         pos.w + pos.dir[0] < width &&
         pos.h + pos.dir[1] >= 0 &&
         pos.w + pos.dir[0] >= 0) {
         if (map[pos.h + pos.dir[1]][pos.w + pos.dir[0]] === '#') {
-            if (dirChangeHistory.has(`${pos.w},${pos.h}`) &&
-                dirChangeHistory
-                    .get(`${pos.w},${pos.h}`)
-                    .some((e) => e[0] === pos.dir[0] && e[1] === pos.dir[1])) {
+            if (dirChangeHistory.has(`${pos.w}${pos.h}${pos.dir}`)) {
                 return true;
             }
-            dirChangeHistory.set(`${pos.w},${pos.h}`, Array.isArray(dirChangeHistory.get(`${pos.w},${pos.h}`))
-                ? [...dirChangeHistory.get(`${pos.w},${pos.h}`), pos.dir]
-                : [pos.dir]);
+            dirChangeHistory.add(`${pos.w}${pos.h}${pos.dir}`);
             pos.dir = dirMap.get(pos.dir);
         }
         pos.w += pos.dir[0];
